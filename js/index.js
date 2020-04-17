@@ -38,15 +38,16 @@ function calculateAll() {
 }
 
 // ITERATION 4
-function removeProduct(event) {
-  const target = event.currentTarget;
-  const product = document.querySelector('.product');
-  product.parentNode.removeChild(product)
+let button = document.querySelectorAll('.btn-remove');
+let buttons = Array.from(button);
+
+function removeProduct(e) {
+  const target = e.currentTarget;
+  let parent = target.parentNode.parentNode ;
+  parent.parentNode.removeChild(parent);
   calculateAll()
 }
 
-let button = document.querySelectorAll('.btn-remove');
-let buttons = Array.from(button);
 
 buttons.forEach(button => button.addEventListener('click', removeProduct));
 
@@ -64,11 +65,40 @@ function createProduct(e) {
   let newProduct = product.cloneNode(true);
   let newProductName = newProduct.querySelector('.name span');
   let newProductPrice = newProduct.querySelector('.price span');
+  
   newProductName.innerHTML = newName;
   newProductPrice.innerHTML = newPrice;
+  console.log(newName)
   let parent = document.getElementsByTagName('tbody')[0];
-  parent.appendChild(newProduct)
-  calculateAll()
+
+  if (newName === '' || newPrice === '0') {
+    alert('Please, introduce a Product Name and a Price');
+  } else {
+    parent.appendChild(newProduct)
+  }
+  
+  // Clear input fields
+  document.querySelectorAll('.create-product input').forEach(input => {
+    if(input.placeholder == 'Product Name') {
+      input.value = '';
+    } else if (input.placeholder == 'Product Price') {
+      input.value = 0;
+    }
+
+  });
+  
+  // Remove new item
+  let newButton = newProduct.querySelectorAll('.btn-remove');
+  let newButtonArray = Array.from(newButton);
+
+  function removeNewProduct(e) {
+    const target = e.currentTarget;
+    let parent = target.parentNode.parentNode;
+    parent.parentNode.removeChild(parent);
+    calculateAll()
+  }
+
+  newButtonArray.forEach(button => button.addEventListener('click', removeNewProduct));
 }
 
 let createButton = document.querySelector('#create');
